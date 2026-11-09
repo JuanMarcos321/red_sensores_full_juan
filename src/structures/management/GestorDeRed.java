@@ -44,9 +44,8 @@ public class GestorDeRed {
     // =========================================================================
 
     public void agregarEvento(String evento) {
-        // TODO 1: Implementar la adición del evento al historial.
-        // Debe registrarse la fecha/hora actual junto con la descripción del evento.
-        // Ejemplo: "[2026-10-24 10:00] Sensor EST-01 activado"
+        String marca = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date());
+        historialEventos.add("[" + marca + "] " + evento);
     }
 
     public List<String> obtenerEventosRecientes(int limite) {
