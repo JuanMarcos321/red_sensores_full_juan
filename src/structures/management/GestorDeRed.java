@@ -110,11 +110,12 @@ public class GestorDeRed {
         colaMonitoreo.add(idSensor);   // Si no estaba, lo agrega al final de la cola
     }
 
-    public String obtenerSiguienteSensor() {
-        // TODO 5: Implementar la rotación del ciclo.
-        // Debe extraer el sensor del frente de la cola y volverlo a insertar al final
-        // para garantizar que todos los sensores sean consultados continuamente.
-        return null;
+    public String obtenerSiguienteSensor() {   // Devuelve el sensor que toca consultar y lo deja al final de la fila
+        String sensor = colaMonitoreo.poll();   // Saca el sensor del frente de la cola (null si la cola está vacía)
+        if (sensor != null) {   // Solo si realmente había un sensor...
+            colaMonitoreo.add(sensor);   // ...lo vuelve a meter al final: así se logra la rotación (round-robin)
+        }   // Fin del if
+        return sensor;   // Devuelve el sensor consultado (o null si no había ninguno)
     }
 
     // =========================================================================
