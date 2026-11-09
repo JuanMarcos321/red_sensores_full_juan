@@ -144,10 +144,14 @@ public class GestorDeRed {
         return new ArrayList<>(topologiaRed.getOrDefault(idSensor, Collections.emptyList()));
     }
 
-    public List<String> detectarEstacionesAisladas() {
-        // TODO 9: Implementar la detección de nodos huérfanos.
-        // Debe retornar una lista de todos los sensores registrados que no tienen ninguna conexión.
-        return null;
+    public List<String> detectarEstacionesAisladas() {   // Devuelve los sensores registrados que no tienen ninguna conexión
+        List<String> aisladas = new ArrayList<>();   // Lista donde se acumularán los sensores aislados
+        for (Map.Entry<String, List<String>> entrada : topologiaRed.entrySet()) {   // Recorre cada par (sensor -> lista de vecinos) del mapa
+            if (entrada.getValue().isEmpty()) {   // Si la lista de vecinos de ese sensor está vacía...
+                aisladas.add(entrada.getKey());   // ...el sensor está aislado: se agrega su id al resultado
+            }   // Fin del if
+        }   // Fin del for
+        return aisladas;   // Devuelve la lista (vacía si ninguno está aislado)
     }
 
     // =========================================================================
