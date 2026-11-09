@@ -168,9 +168,9 @@ public class GestorDeRed {
         return bufferIngesta.poll();   // poll() saca y devuelve el primero de la cola; si está vacía devuelve null (no lanza excepción)
     }
 
-    public List<LecturaSensor> filtrarAlertasCriticas(double limitePm25) {
-        // TODO EXTRA: Usar Streams para filtrar lecturas con PM2.5 superior al límite.
-        // Debe retornar una lista con las lecturas filtradas.
-        return null;
+    public List<LecturaSensor> filtrarAlertasCriticas(double limitePm25) {   // Devuelve las lecturas del buffer cuyo PM2.5 supera el límite
+        return bufferIngesta.stream()   // Convierte la cola en un flujo (Stream) para procesarla de forma declarativa
+                .filter(l -> l.getPm25() > limitePm25)   // Se queda solo con las lecturas cuyo PM2.5 es mayor al límite
+                .collect(Collectors.toList());   // Junta las lecturas filtradas en una lista y la devuelve
     }
 }
