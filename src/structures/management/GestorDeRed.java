@@ -29,34 +29,52 @@ public class GestorDeRed {
     // 5. Buffer de Ingesta: Cola de espera para procesar lecturas entrantes
     private Queue<LecturaSensor> bufferIngesta;
 
-    public GestorDeRed() {
-        // TODO: Inicializa las colecciones usando las implementaciones más adecuadas de Java
-        // (ArrayList, ArrayDeque, HashMap, etc.)
-        this.historialEventos = new ArrayList<>();
-        this.navegadorAlertas = new ArrayDeque<>();
-        this.colaMonitoreo = new ArrayDeque<>();
-        this.topologiaRed = new HashMap<>();
-        this.bufferIngesta = new ArrayDeque<>();
-    }
+
+
+    public GestorDeRed() {   // Constructor: se ejecuta al crear un GestorDeRed y deja las 5 colecciones listas
+        // LinkedList: borrar el primer elemento es O(1) (en ArrayList seria O(n)).
+        this.historialEventos = new LinkedList<>();   // Lista doblemente enlazada para el historial de eventos
+        this.navegadorAlertas = new ArrayDeque<>();   // Deque (cola de dos extremos) para navegar alertas adelante/atrás
+        this.colaMonitoreo = new ArrayDeque<>();      // Cola FIFO con el ciclo de sensores a consultar
+        this.topologiaRed = new HashMap<>();          // Mapa sensor -> lista de vecinos (lista de adyacencia del grafo)
+        this.bufferIngesta = new ArrayDeque<>();      // Cola FIFO con las lecturas pendientes de procesar
+    }   // Fin del constructor
+
+
 
     // =========================================================================
     // SECCIÓN 1: HISTORIAL Y EVENTOS
     // =========================================================================
 
-    public void agregarEvento(String evento) {
+
+
+    public void agregarEvento(String evento) {   // Metodo público que recibe la descripción del evento, ej. "Sensor EST-01 activado"
+        // new java.util.Date() crea la fecha/hora actual; SimpleDateFormat la convierte a texto "año-mes-día hora:minuto"
         String marca = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date());
+        // Agrega al FINAL del historial: la marca entre corchetes + un espacio + el texto del evento
         historialEventos.add("[" + marca + "] " + evento);
     }
 
-    public List<String> obtenerEventosRecientes(int limite) {
-        if (historialEventos.size() <= limite) return new ArrayList<>(historialEventos);
-        return historialEventos.subList(historialEventos.size() - limite, historialEventos.size());
+
+
+    public List<String> obtenerEventosRecientes(int limite) {   // Devuelve los últimos 'limite' eventos del historial
+        if (limite <= 0) return new ArrayList<>();   // Si piden 0 o negativo, devuelve una lista vacía
+        if (historialEventos.size() <= limite) return new ArrayList<>(historialEventos);   // Si hay menos eventos que el límite, devuelve una copia de todos
+        // Se devuelve una COPIA: subList es solo una vista del historial.
+        // subList(desde, hasta) toma los últimos 'limite' elementos; new ArrayList<>(...) los copia a una lista independiente
+        return new ArrayList<>(historialEventos.subList(historialEventos.size() - limite, historialEventos.size()));
     }
 
-    public void limpiarHistorialAntiguo(int mantener) {
-        // TODO 10: Implementar la optimización del historial.
-        // Eliminar los registros más antiguos para mantener solo los últimos 'mantener' eventos.
+
+
+    public void limpiarHistorialAntiguo(int mantener) {   // Conserva solo los últimos 'mantener' eventos
+        int limite = Math.max(mantener, 0);   // Si 'mantener' es negativo, se usa 0 para evitar un bucle raro
+        while (historialEventos.size() > limite) {   // Mientras haya más eventos de los permitidos...
+            historialEventos.remove(0);   // ...elimina el más antiguo (índice 0, el primero); en LinkedList es O(1)
+        }
     }
+
+
 
     // =========================================================================
     // SECCIÓN 2: NAVEGACIÓN DE ALERTAS
