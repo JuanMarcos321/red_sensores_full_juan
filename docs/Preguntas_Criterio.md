@@ -8,21 +8,30 @@ Responde a las siguientes preguntas basándote en la teoría de nodos y el rendi
 Para el `historialEventos`, podrías usar un `ArrayList` o un `LinkedList`. 
 - Si la plataforma registra miles de eventos por segundo y necesitas eliminar los más antiguos frecuentemente para ahorrar memoria, ¿cuál de las dos colecciones es más eficiente y por qué? (Pista: piensa en el costo de eliminar el primer elemento).
 
+**Respuesta:** Es mas eficiente LinkedList. En un ArrayList borrar el primero cuesta O(n) porque hay que correr todos los elementos una posicion, y en LinkedList es O(1) porque solo se cambia la cabeza. Como siempre borro los eventos mas viejos que estan al inicio, use LinkedList.
 ### 2. Navegación Bidireccional
 En el `navegadorAlertas`, utilizamos un `Deque` (Double Ended Queue). 
 - ¿Qué ventaja ofrece un `Deque` sobre una `Queue` simple para implementar la funcionalidad de "Atrás" y "Adelante"? 
 - ¿Cómo se relaciona esto con el concepto de un `NodoDoble`?
+
+**Respuesta:** el Deque deja agregar y sacar por los dos extremos y la Queue simple solo por uno, entonces con una Queue no podria devolverme para Atras. Se parece al NodoDoble porque este tiene siguiente y anterior, o sea que se puede ir para los dos lados.
 
 ### 3. El Ciclo de Monitoreo
 Para la `colaMonitoreo`, implementaste una rotación (sacar del frente y meter al final).
 - ¿Por qué una `Queue` es la estructura natural para este problema? 
 - ¿Qué pasaría con la equidad del sistema si usaras una `Stack` (Pila) en su lugar?
 
+**Respuesta:** en la Queue el sensor que lleva mas tiempo esperando se consulta primero y despues vuelve al final, asi todos tienen su turno. Con una Stack saldria siempre el ultimo que entro y los otros sensores casi nunca se consultarian y eso no seria justo.
+
 ### 4. Topología de Red (El Grafo)
 Representaste la red de sensores como un `Map<String, List<String>>`.
 - ¿Por qué usamos un `Map` y no un arreglo bidimensional (matriz de adyacencia) considerando que la mayoría de los sensores solo están conectados a 2 o 3 vecinos?
 - ¿Cómo se traduce esta estructura de `Map` a la idea de un `NodoGrafo` con una lista de adyacencias?
 
+**Respuesta:** Use Map porque una matriz gastaria mucha memoria con casi todas las casillas vacias, y con el Map solo guardo los vecinos que de verdad existen. Cada llave es un sensor como un NodoGrafo, y su lista de valores son sus vecinos osea la lista de adyacencia.
+
 ### 5. Buffer de Ingesta y Rendimiento
 El `bufferIngesta` procesa datos en orden FIFO.
 - Si el volumen de datos aumenta drásticamente y necesitas procesar las lecturas en paralelo usando múltiples hilos, ¿seguiría siendo adecuado un `ArrayDeque` o deberías cambiar a una `ConcurrentLinkedQueue`? Justifica tu respuesta basándote en la seguridad de hilos (Thread-safety).
+
+**Respuesta:** en el ArrayDeque  si dos hilos hacen add o poll al mismo tiempo se puede dañar la cola o perder lecturas. Con varios hilos habria que cambiar a ConcurrentLinkedQueue porque es segura para hilos y mantiene el orden FIFO. Con un solo hilo si sirve ArrayDeque.
