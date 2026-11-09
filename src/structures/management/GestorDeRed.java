@@ -138,11 +138,10 @@ public class GestorDeRed {
         topologiaRed.computeIfAbsent(idSensor, k -> new ArrayList<>());   // Si no existe, lo crea con lista de vecinos vacía (queda aislado)
     }
 
-    public List<String> obtenerVecinos(String idSensor) {
-        // TODO 7: Implementar la consulta de conexiones.
-        // Debe devolver la lista de sensores conectados al idSensor proporcionado.
-        // Retornar una lista vacía si el sensor no tiene conexiones.
-        return null;
+    public List<String> obtenerVecinos(String idSensor) {   // Devuelve los sensores conectados a idSensor
+        // getOrDefault: si el sensor no existe en el mapa devuelve una lista vacía (evita null);
+        // new ArrayList<>(...) devuelve una COPIA para que quien llama no pueda alterar el grafo interno
+        return new ArrayList<>(topologiaRed.getOrDefault(idSensor, Collections.emptyList()));
     }
 
     public List<String> detectarEstacionesAisladas() {
