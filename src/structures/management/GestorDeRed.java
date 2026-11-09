@@ -105,9 +105,9 @@ public class GestorDeRed {
     // SECCIÓN 3: CICLO DE MONITOREO
     // =========================================================================
 
-    public void programarConsulta(String idSensor) {
-        // TODO 4: Implementar la programación de la consulta.
-        // El sensor debe agregarse a la cola solo si NO está ya programado.
+    public void programarConsulta(String idSensor) {   // Agrega un sensor al ciclo de monitoreo
+        if (idSensor == null || colaMonitoreo.contains(idSensor)) return;   // Si el id es nulo o ya está en la cola, no hace nada (evita duplicados)
+        colaMonitoreo.add(idSensor);   // Si no estaba, lo agrega al final de la cola
     }
 
     public String obtenerSiguienteSensor() {
