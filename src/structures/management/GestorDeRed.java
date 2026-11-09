@@ -93,11 +93,12 @@ public class GestorDeRed {
         return alertaActual;   // Devuelve la alerta a la que se navegó
     }
 
-    public String navegarAlAnterior() {
-        // TODO 3: Implementar la lógica de desplazamiento hacia atrás.
-        // Debe devolver la alerta anterior o null si es la primera.
-        // Recuerda actualizar el estado de 'alertaActual'.
-        return null;
+    public String navegarAlAnterior() {   // Retrocede a la alerta anterior (operación inversa de navegarAlSiguiente)
+        if (navegadorAlertas.isEmpty()) return null;   // Si no hay alertas, devuelve null
+        String ultima = navegadorAlertas.pollLast();   // Saca la alerta actual (la que está al final del Deque)
+        navegadorAlertas.addFirst(ultima);   // La manda al frente: deshace el movimiento del "siguiente"
+        alertaActual = navegadorAlertas.peekLast();   // La nueva actual es el nuevo último elemento (solo mira, no lo saca)
+        return alertaActual;   // Devuelve la alerta anterior, que ahora es la actual
     }
 
     public String getAlertaActual() { return alertaActual; }
