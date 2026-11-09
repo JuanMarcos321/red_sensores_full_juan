@@ -122,10 +122,20 @@ public class GestorDeRed {
     // SECCIÓN 4: TOPOLOGÍA DE RED
     // =========================================================================
 
-    public void registrarConexion(String sensorA, String sensorB) {
-        // TODO 6: Implementar la conexión bidireccional entre dos sensores.
-        // Debe agregar sensorB a la lista de vecinos de sensorA, y viceversa.
-        // Asegurar que no se creen conexiones duplicadas.
+    public void registrarConexion(String sensorA, String sensorB) {   // Conecta dos sensores en ambos sentidos
+        if (sensorA == null || sensorB == null || sensorA.equals(sensorB)) return;   // Ignora ids nulos y conexiones de un sensor consigo mismo
+        // computeIfAbsent: devuelve la lista de vecinos de A; si A no existía en el mapa, crea una lista vacía y la guarda
+        List<String> vecinosA = topologiaRed.computeIfAbsent(sensorA, k -> new ArrayList<>());
+        // Lo mismo para B: así ambos sensores quedan registrados en el grafo
+        List<String> vecinosB = topologiaRed.computeIfAbsent(sensorB, k -> new ArrayList<>());
+        if (!vecinosA.contains(sensorB)) vecinosA.add(sensorB);   // Agrega B como vecino de A solo si no estaba (evita duplicados)
+        if (!vecinosB.contains(sensorA)) vecinosB.add(sensorA);   // Agrega A como vecino de B solo si no estaba (conexión bidireccional)
+    }
+
+    /** Registra una estacion en la red sin conectarla (nace aislada). */
+    public void registrarSensor(String idSensor) {   // Metodo nuevo: permite que exista un sensor sin conexiones
+        if (idSensor == null) return;   // Ignora ids nulos
+        topologiaRed.computeIfAbsent(idSensor, k -> new ArrayList<>());   // Si no existe, lo crea con lista de vecinos vacía (queda aislado)
     }
 
     public List<String> obtenerVecinos(String idSensor) {
