@@ -35,3 +35,7 @@ El `bufferIngesta` procesa datos en orden FIFO.
 - Si el volumen de datos aumenta drásticamente y necesitas procesar las lecturas en paralelo usando múltiples hilos, ¿seguiría siendo adecuado un `ArrayDeque` o deberías cambiar a una `ConcurrentLinkedQueue`? Justifica tu respuesta basándote en la seguridad de hilos (Thread-safety).
 
 **Respuesta:** en el ArrayDeque  si dos hilos hacen add o poll al mismo tiempo se puede dañar la cola o perder lecturas. Con varios hilos habria que cambiar a ConcurrentLinkedQueue porque es segura para hilos y mantiene el orden FIFO. Con un solo hilo si sirve ArrayDeque.
+
+**USO DE LA IA:**
+
+Para este proyecto use Claude de apoyo. Me ayudo a plantear e implementar los retos de GestorDeRed, a comentar el codigo y a resolver problemas de configuracion de IntelliJ y de git. Yo ejecute los tests hasta que pasaron los 55, revise el codigo y escribi las respuestas.
